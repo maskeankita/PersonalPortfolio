@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const mysql = require("mysql2");
 require("dotenv").config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -10,9 +11,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve your HTML, CSS and JavaScript files
+// Serve HTML, CSS and JavaScript files
 app.use(express.static(__dirname));
-
 
 // ================= MYSQL CONNECTION =================
 
@@ -32,7 +32,6 @@ db.connect((err) => {
     console.log("MySQL connected successfully!");
 });
 
-
 // ================= BACKEND STATUS =================
 
 app.get("/api/status", (req, res) => {
@@ -41,7 +40,6 @@ app.get("/api/status", (req, res) => {
         message: "Portfolio backend is running successfully!"
     });
 });
-
 
 // ================= GET PROJECTS FROM MYSQL =================
 
@@ -67,7 +65,6 @@ app.get("/api/projects", (req, res) => {
     });
 });
 
-
 // ================= CONTACT FORM =================
 
 app.post("/api/contact", (req, res) => {
@@ -92,11 +89,8 @@ app.post("/api/contact", (req, res) => {
     });
 });
 
-
 // ================= START SERVER =================
 
-const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-    console.log(`Portfolio server running at http://localhost:${PORT}`);
+    console.log(`Portfolio server running on port ${PORT}`);
 });
