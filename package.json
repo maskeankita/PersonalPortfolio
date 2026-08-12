@@ -1,0 +1,17 @@
+{
+  "name": "personalportfolio",
+  "version": "1.0.0",
+  "description": "Full-stack personal portfolio website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.23.3"
+  }
+}

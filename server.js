@@ -1,0 +1,100 @@
+const express = require("express");
+const path = require("path");
+const mysql = require("mysql2");
+require("dotenv").config();
+const app = express();
+const PORT = 3000;
+
+// ================= MIDDLEWARE =================
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve your HTML, CSS and JavaScript files
+app.use(express.static(__dirname));
+
+
+// ================= MYSQL CONNECTION =================
+
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
+db.connect((err) => {
+    if (err) {
+        console.error("MySQL connection failed:", err.message);
+        return;
+    }
+
+    console.log("MySQL connected successfully!");
+});
+
+
+// ================= BACKEND STATUS =================
+
+app.get("/api/status", (req, res) => {
+    res.json({
+        success: true,
+        message: "Portfolio backend is running successfully!"
+    });
+});
+
+
+// ================= GET PROJECTS FROM MYSQL =================
+
+app.get("/api/projects", (req, res) => {
+
+    const sql = "SELECT * FROM projects";
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+            console.error("Database error:", err.message);
+
+            return res.status(500).json({
+                success: false,
+                message: "Unable to fetch projects"
+            });
+        }
+
+        res.json({
+            success: true,
+            projects: results
+        });
+    });
+});
+
+
+// ================= CONTACT FORM =================
+
+app.post("/api/contact", (req, res) => {
+
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in all fields."
+        });
+    }
+
+    console.log("New contact message:");
+    console.log("Name:", name);
+    console.log("Email:", email);
+    console.log("Message:", message);
+
+    res.json({
+        success: true,
+        message: "Thank you! Your message has been received."
+    });
+});
+
+
+// ================= START SERVER =================
+
+app.listen(PORT, () => {
+    console.log(`Portfolio server running at http://localhost:${PORT}`);
+});
