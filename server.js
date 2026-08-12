@@ -3,7 +3,7 @@ const path = require("path");
 const mysql = require("mysql2");
 require("dotenv").config();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // ================= MIDDLEWARE =================
 
@@ -94,6 +94,8 @@ app.post("/api/contact", (req, res) => {
 
 
 // ================= START SERVER =================
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Portfolio server running at http://localhost:${PORT}`);
