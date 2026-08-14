@@ -1,6 +1,6 @@
 // ================= PROJECTS =================
 
-function loadProjects() {
+async function loadProjects() {
 
     const container = document.getElementById("projects-container");
 
@@ -8,66 +8,66 @@ function loadProjects() {
         return;
     }
 
-    const projects = [
+    try {
 
-        {
-            title: "Intelligent Automatic Bathroom Ventilation System",
+        const response = await fetch("/api/projects");
 
-            description:
-                "An automatic bathroom ventilation system using ESP32 and DHT22 sensor. The system monitors humidity and automatically controls an exhaust fan when humidity increases.",
-
-            technologies:
-                "ESP32, DHT22, Arduino IDE, Embedded C"
-        },
-
-        {
-            title: "Automatic Bell System using IoT",
-
-            description:
-                "An IoT-based automatic bell system designed to schedule and control a school bell automatically using a microcontroller and real-time clock.",
-
-            technologies:
-                "NodeMCU ESP8266, RTC DS3231, Arduino IDE, IoT"
-        },
-
-        {
-            title: "Personal Portfolio Website",
-
-            description:
-                "A personal portfolio website showcasing my skills, education, projects, certifications, internship experience and contact information.",
-
-            technologies:
-                "HTML, CSS, JavaScript, GitHub Pages"
+        if (!response.ok) {
+            throw new Error("Failed to fetch projects");
         }
 
-    ];
+        const data = await response.json();
 
-    // Clear the loading message
-    container.innerHTML = "";
+        if (!data.success) {
 
-    // Create project cards
-    projects.forEach(function (project) {
+            container.innerHTML = `
+                <p>Unable to load projects.</p>
+            `;
 
-        const card = document.createElement("div");
+            return;
+        }
 
-        card.className = "project-card";
+        container.innerHTML = "";
 
-        card.innerHTML = `
-            <h3>${project.title}</h3>
+        if (!data.projects || data.projects.length === 0) {
 
-            <p>
-                ${project.description}
-            </p>
+            container.innerHTML = `
+                <p>No projects available.</p>
+            `;
 
-            <p>
-                <strong>Technologies:</strong>
-                ${project.technologies}
-            </p>
+            return;
+        }
+
+        data.projects.forEach((project) => {
+
+            const card = document.createElement("div");
+
+            card.className = "project-card";
+
+            card.innerHTML = `
+                <h3>${project.title}</h3>
+
+                <p>
+                    ${project.description}
+                </p>
+
+                <p>
+                    <strong>Technologies:</strong>
+                    ${project.technologies}
+                </p>
+            `;
+
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+
+        console.error("Project loading error:", error);
+
+        container.innerHTML = `
+            <p>Unable to connect to the server.</p>
         `;
-
-        container.appendChild(card);
-
-    });
+    }
 }
 
 
@@ -77,21 +77,14 @@ const contactForm = document.getElementById("contactForm");
 
 if (contactForm) {
 
-    contactForm.addEventListener("submit", function (event) {
+    contactForm.addEventListener("submit", async function (event) {
 
         event.preventDefault();
 
-        const name =
-            document.getElementById("name").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
 
-        const email =
-            document.getElementById("email").value.trim();
-
-        const message =
-            document.getElementById("message").value.trim();
-
-
-        // Check if fields are empty
         if (!name || !email || !message) {
 
             alert("Please fill in all fields.");
@@ -99,34 +92,46 @@ if (contactForm) {
             return;
         }
 
+        try {
 
-        // Prepare email
-        const subject = encodeURIComponent(
-            "Portfolio Contact from " + name
-        );
+            const response = await fetch("/api/contact", {
 
-        const body = encodeURIComponent(
-            "Name: " + name +
-            "\nEmail: " + email +
-            "\n\nMessage:\n" + message
-        );
+                method: "POST",
 
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-        // Open user's email application
-        window.location.href =
-            "mailto:maskeankita12@gmail.com" +
-            "?subject=" + subject +
-            "&body=" + body;
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    message: message
+                })
 
+            });
+
+            if (!response.ok) {
+                throw new Error("Contact request failed");
+            }
+
+            const data = await response.json();
+
+            alert(data.message);
+
+            if (data.success) {
+                contactForm.reset();
+            }
+
+        } catch (error) {
+
+            console.error("Contact form error:", error);
+
+            alert("Unable to send message.");
+        }
     });
-
 }
 
 
-// ================= START WEBSITE =================
+// ================= START =================
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    loadProjects();
-
-});
+loadProjects();

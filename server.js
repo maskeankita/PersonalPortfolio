@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const mysql = require("mysql2");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 // ================= MIDDLEWARE =================
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -71,24 +73,51 @@ app.post("/api/contact", (req, res) => {
 
     const { name, email, message } = req.body;
 
+    // Check required fields
     if (!name || !email || !message) {
+
         return res.status(400).json({
             success: false,
             message: "Please fill in all fields."
         });
     }
 
-    console.log("New contact message:");
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Message:", message);
+    // Insert contact message into MySQL
+    const sql = `
+        INSERT INTO contacts (name, email, message)
+        VALUES (?, ?, ?)
+    `;
 
-    res.json({
-        success: true,
-        message: "Thank you! Your message has been received."
-    });
+    db.query(
+        sql,
+        [name, email, message],
+        (err, result) => {
+
+            if (err) {
+
+                console.error(
+                    "Contact database error:",
+                    err.message
+                );
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Unable to save your message."
+                });
+            }
+
+            console.log(
+                "New contact message saved. ID:",
+                result.insertId
+            );
+
+            res.json({
+                success: true,
+                message: "Thank you! Your message has been received."
+            });
+        }
+    );
 });
-
 // ================= START SERVER =================
 
 app.listen(PORT, () => {
