@@ -1,88 +1,159 @@
 // ========================================
+// STATIC PORTFOLIO - GITHUB PAGES
+// ========================================
+
+
+// ========================================
 // PROJECTS
 // ========================================
 
-async function loadProjects() {
-    const container = document.getElementById("projects-container");
+const projects = [
+
+    {
+        title: "Personal Portfolio",
+
+        description:
+            "A responsive personal portfolio website showcasing my skills, education, projects and contact information.",
+
+        technologies:
+            "HTML, CSS, JavaScript"
+    },
+
+    {
+        title: "Library Management System",
+
+        description:
+            "A library management system developed using XML and XQuery to store and retrieve book and student information.",
+
+        technologies:
+            "XML, XQuery"
+    },
+
+    {
+        title: "Student Management System",
+
+        description:
+            "A student management project for storing and managing student information.",
+
+        technologies:
+            "HTML, CSS, JavaScript"
+    }
+
+];
+
+
+// ========================================
+// LOAD PROJECTS
+// ========================================
+
+function loadProjects() {
+
+    const container =
+        document.getElementById("projects-container");
+
 
     if (!container) {
-        console.error("ERROR: projects-container not found.");
+
+        console.error(
+            "ERROR: projects-container not found."
+        );
+
         return;
     }
 
-    try {
-        console.log("Loading projects...");
 
-        const response = await fetch("/api/projects");
+    // Clear existing content
 
-        console.log("API status:", response.status);
+    container.innerHTML = "";
 
-        if (!response.ok) {
-            throw new Error(
-                `Server returned status ${response.status}`
-            );
-        }
 
-        const data = await response.json();
+    // Create project cards
 
-        console.log("Projects API response:", data);
+    projects.forEach((project) => {
 
-        if (!data.success) {
-            container.innerHTML = `
-                <p>Unable to load projects.</p>
-            `;
-            return;
-        }
+        const card =
+            document.createElement("div");
 
-        if (!data.projects || data.projects.length === 0) {
-            container.innerHTML = `
-                <p>No projects available.</p>
-            `;
-            return;
-        }
+        card.className =
+            "project-card";
 
-        // Clear loading message
-        container.innerHTML = "";
 
-        // Create project cards
-        data.projects.forEach((project) => {
-            const card = document.createElement("div");
+        // ================================
+        // PROJECT TITLE
+        // ================================
 
-            card.className = "project-card";
+        const title =
+            document.createElement("h3");
 
-            const title = document.createElement("h3");
-            title.textContent = project.title || "Untitled Project";
+        title.textContent =
+            project.title;
 
-            const description = document.createElement("p");
-            description.textContent =
-                project.description || "No description available.";
 
-            const technologies = document.createElement("p");
+        // ================================
+        // PROJECT DESCRIPTION
+        // ================================
 
-            const strong = document.createElement("strong");
-            strong.textContent = "Technologies: ";
+        const description =
+            document.createElement("p");
 
-            technologies.appendChild(strong);
-            technologies.appendChild(
-                document.createTextNode(
-                    project.technologies || "Not specified"
-                )
-            );
+        description.textContent =
+            project.description;
 
-            card.appendChild(title);
-            card.appendChild(description);
-            card.appendChild(technologies);
 
-            container.appendChild(card);
-        });
+        // ================================
+        // TECHNOLOGIES
+        // ================================
 
-    } catch (error) {
-        console.error("Project loading error:", error);
+        const technologies =
+            document.createElement("p");
 
-        container.innerHTML = `
-            <p>Unable to connect to the server.</p>
-        `;
-    }
+
+        const strong =
+            document.createElement("strong");
+
+        strong.textContent =
+            "Technologies: ";
+
+
+        technologies.appendChild(
+            strong
+        );
+
+
+        technologies.appendChild(
+            document.createTextNode(
+                project.technologies
+            )
+        );
+
+
+        // ================================
+        // ADD CONTENT TO CARD
+        // ================================
+
+        card.appendChild(
+            title
+        );
+
+        card.appendChild(
+            description
+        );
+
+        card.appendChild(
+            technologies
+        );
+
+
+        // ================================
+        // ADD CARD TO CONTAINER
+        // ================================
+
+        container.appendChild(
+            card
+        );
+
+    });
+
 }
 
 
@@ -90,74 +161,161 @@ async function loadProjects() {
 // CONTACT FORM
 // ========================================
 
-const contactForm = document.getElementById("contactForm");
+function setupContactForm() {
 
-if (contactForm) {
+    const contactForm =
+        document.getElementById(
+            "contactForm"
+        );
 
-    contactForm.addEventListener("submit", async function (event) {
 
-        event.preventDefault();
+    if (!contactForm) {
 
-        const nameInput = document.getElementById("name");
-        const emailInput = document.getElementById("email");
-        const messageInput = document.getElementById("message");
+        console.log(
+            "Contact form not found."
+        );
 
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const message = messageInput.value.trim();
+        return;
+    }
 
-        if (!name || !email || !message) {
-            alert("Please fill in all fields.");
-            return;
-        }
 
-        try {
+    contactForm.addEventListener(
+        "submit",
+        function (event) {
 
-            const response = await fetch("/api/contact", {
-                method: "POST",
+            event.preventDefault();
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
 
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    message: message
-                })
-            });
+            // ============================
+            // GET FORM INPUTS
+            // ============================
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Contact request failed"
+            const nameInput =
+                document.getElementById(
+                    "name"
                 );
+
+
+            const emailInput =
+                document.getElementById(
+                    "email"
+                );
+
+
+            const messageInput =
+                document.getElementById(
+                    "message"
+                );
+
+
+            const name =
+                nameInput.value.trim();
+
+
+            const email =
+                emailInput.value.trim();
+
+
+            const message =
+                messageInput.value.trim();
+
+
+            // ============================
+            // VALIDATION
+            // ============================
+
+            if (
+                !name ||
+                !email ||
+                !message
+            ) {
+
+                alert(
+                    "Please fill in all fields."
+                );
+
+                return;
             }
 
-            alert(data.message);
 
-            if (data.success) {
-                contactForm.reset();
-            }
+            // ============================
+            // YOUR EMAIL ADDRESS
+            // ============================
 
-        } catch (error) {
+            const myEmail =
+                "maskeankita12@gmail.com";
 
-            console.error(
-                "Contact form error:",
-                error
-            );
 
-            alert("Unable to send message.");
+            // ============================
+            // EMAIL SUBJECT
+            // ============================
+
+            const subject =
+                encodeURIComponent(
+                    "Portfolio Contact from " +
+                    name
+                );
+
+
+            // ============================
+            // EMAIL BODY
+            // ============================
+
+            const body =
+                encodeURIComponent(
+
+                    "Name: " +
+                    name +
+
+                    "\n\n" +
+
+                    "Email: " +
+                    email +
+
+                    "\n\n" +
+
+                    "Message:\n" +
+                    message
+
+                );
+
+
+            // ============================
+            // OPEN EMAIL APPLICATION
+            // ============================
+
+            window.location.href =
+                "mailto:" +
+                myEmail +
+                "?subject=" +
+                subject +
+                "&body=" +
+                body;
+
+
+            // ============================
+            // RESET FORM
+            // ============================
+
+            contactForm.reset();
+
         }
-    });
+    );
+
 }
 
 
 // ========================================
-// START
+// START WEBSITE
 // ========================================
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadProjects();
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadProjects();
+
+        setupContactForm();
+
+    }
+);
