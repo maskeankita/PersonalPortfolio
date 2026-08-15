@@ -1,5 +1,10 @@
 // ========================================
-// YOUR PROJECTS
+// PERSONAL PORTFOLIO
+// ========================================
+
+
+// ========================================
+// PROJECT DATA
 // ========================================
 
 const projects = [
@@ -26,7 +31,7 @@ const projects = [
 
 
 // ========================================
-// LOAD PROJECTS
+// DISPLAY PROJECTS
 // ========================================
 
 function loadProjects() {
@@ -35,68 +40,58 @@ function loadProjects() {
         document.getElementById("projects-container");
 
     if (!container) {
-        console.error(
-            "ERROR: projects-container not found."
-        );
+        console.error("projects-container not found.");
         return;
     }
 
     container.innerHTML = "";
 
-    projects.forEach((project) => {
+    projects.forEach(function (project) {
 
-        const card =
-            document.createElement("div");
+        const card = document.createElement("div");
 
         card.className = "project-card";
 
 
         // Project title
-        const title =
-            document.createElement("h3");
+        const title = document.createElement("h3");
 
-        title.textContent =
-            project.title;
+        title.textContent = project.title;
 
 
         // Project description
-        const description =
-            document.createElement("p");
+        const description = document.createElement("p");
 
-        description.textContent =
-            project.description;
+        description.textContent = project.description;
 
 
         // Technologies
-        const technologies =
-            document.createElement("p");
+        const technologyText = document.createElement("p");
 
-        const strong =
+        const technologyLabel =
             document.createElement("strong");
 
-        strong.textContent =
-            "Technologies: ";
+        technologyLabel.textContent = "Technologies: ";
 
-        technologies.appendChild(strong);
+        technologyText.appendChild(technologyLabel);
 
-        technologies.appendChild(
+        technologyText.appendChild(
             document.createTextNode(
                 project.technologies
             )
         );
 
 
-        // Add everything to card
+        // Add elements to card
         card.appendChild(title);
 
         card.appendChild(description);
 
-        card.appendChild(technologies);
+        card.appendChild(technologyText);
 
 
         // Add card to page
         container.appendChild(card);
-
     });
 }
 
@@ -123,24 +118,17 @@ function setupContactForm() {
             event.preventDefault();
 
 
-            const nameInput =
-                document.getElementById("name");
-
-            const emailInput =
-                document.getElementById("email");
-
-            const messageInput =
-                document.getElementById("message");
-
-
             const name =
-                nameInput.value.trim();
+                document.getElementById("name")
+                    ?.value.trim();
 
             const email =
-                emailInput.value.trim();
+                document.getElementById("email")
+                    ?.value.trim();
 
             const message =
-                messageInput.value.trim();
+                document.getElementById("message")
+                    ?.value.trim();
 
 
             // Validate
@@ -154,31 +142,45 @@ function setupContactForm() {
             }
 
 
-            // YOUR EMAIL
+            // ====================================
+            // YOUR EMAIL ADDRESS
+            // ====================================
+
             const myEmail =
                 "maskeankita12@gmail.com";
 
 
-            // Email subject
+            // ====================================
+            // EMAIL SUBJECT
+            // ====================================
+
             const subject =
                 encodeURIComponent(
-                    "Portfolio Contact from " + name
+                    "Portfolio Contact - " + name
                 );
 
 
-            // Email body
+            // ====================================
+            // EMAIL MESSAGE
+            // ====================================
+
             const body =
                 encodeURIComponent(
                     "Name: " +
                     name +
+
                     "\n\nEmail: " +
                     email +
+
                     "\n\nMessage:\n" +
                     message
                 );
 
 
-            // Open email application
+            // ====================================
+            // OPEN EMAIL APPLICATION
+            // ====================================
+
             window.location.href =
                 "mailto:" +
                 myEmail +
@@ -190,14 +192,13 @@ function setupContactForm() {
 
             // Clear form
             contactForm.reset();
-
         }
     );
 }
 
 
 // ========================================
-// START
+// PAGE START
 // ========================================
 
 document.addEventListener(
