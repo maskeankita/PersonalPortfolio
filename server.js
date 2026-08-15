@@ -1,16 +1,22 @@
 const express = require("express");
-const path = require("path");
 const mysql = require("mysql2");
 const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 
+// ==================================================
+// SERVER PORT
 // Railway provides PORT automatically.
-// For local computer, it will use 3000.
+// Local computer uses 3000.
+// ==================================================
+
 const PORT = process.env.PORT || 3000;
 
-// ================= MIDDLEWARE =================
+
+// ==================================================
+// MIDDLEWARE
+// ==================================================
 
 app.use(cors());
 
@@ -18,33 +24,58 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-// Serve HTML, CSS and JavaScript files
+// Serve HTML, CSS, JavaScript, images, etc.
 app.use(express.static(__dirname));
 
 
-// ================= MYSQL CONNECTION =================
+// ==================================================
+// MYSQL CONNECTION
+// ==================================================
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 3306,
+    port: Number(process.env.DB_PORT) || 3306,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
 });
 
+
+// ==================================================
+// MYSQL CONNECT
+// ==================================================
+
 db.connect((err) => {
 
     if (err) {
-        console.error("MySQL connection failed:", err.message);
+
+        console.error("=================================");
+        console.error("MYSQL CONNECTION FAILED");
+        console.error("=================================");
+
+        console.error("Error code:", err.code);
+        console.error("Error message:", err.message);
+        console.error("Error errno:", err.errno);
+        console.error("Error sqlState:", err.sqlState);
+
+        console.error("=================================");
+
         return;
     }
 
+    console.log("=================================");
     console.log("MySQL connected successfully!");
+    console.log("Database host:", process.env.DB_HOST);
+    console.log("Database port:", process.env.DB_PORT || 3306);
+    console.log("Database name:", process.env.DB_NAME);
+    console.log("=================================");
 
 });
 
 
-// ================= BACKEND STATUS =================
+// ==================================================
+// BACKEND STATUS
+// ==================================================
 
 app.get("/api/status", (req, res) => {
 
@@ -56,7 +87,9 @@ app.get("/api/status", (req, res) => {
 });
 
 
-// ================= GET PROJECTS FROM MYSQL =================
+// ==================================================
+// GET PROJECTS FROM MYSQL
+// ==================================================
 
 app.get("/api/projects", (req, res) => {
 
@@ -67,7 +100,7 @@ app.get("/api/projects", (req, res) => {
         if (err) {
 
             console.error(
-                "Database error:",
+                "Database error while fetching projects:",
                 err.message
             );
 
@@ -88,13 +121,17 @@ app.get("/api/projects", (req, res) => {
 });
 
 
-// ================= CONTACT FORM =================
+// ==================================================
+// CONTACT FORM
+// ==================================================
 
 app.post("/api/contact", (req, res) => {
 
     const { name, email, message } = req.body;
 
+
     // Check required fields
+
     if (!name || !email || !message) {
 
         return res.status(400).json({
@@ -104,11 +141,14 @@ app.post("/api/contact", (req, res) => {
 
     }
 
+
     // Insert contact message into MySQL
+
     const sql = `
         INSERT INTO contacts (name, email, message)
         VALUES (?, ?, ?)
     `;
+
 
     db.query(
         sql,
@@ -129,10 +169,12 @@ app.post("/api/contact", (req, res) => {
 
             }
 
+
             console.log(
                 "New contact message saved. ID:",
                 result.insertId
             );
+
 
             res.json({
                 success: true,
@@ -145,12 +187,19 @@ app.post("/api/contact", (req, res) => {
 });
 
 
-// ================= START SERVER =================
+// ==================================================
+// START SERVER
+// ==================================================
 
 app.listen(PORT, "0.0.0.0", () => {
 
-    console.log(
-        `Portfolio server running on port ${PORT}`
-    );
+    console.log("=================================");
+    console.log(`Portfolio server running on port ${PORT}`);
+    console.log("=================================");
 
 });
+
+
+
+
+
