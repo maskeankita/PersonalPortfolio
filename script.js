@@ -1,44 +1,27 @@
 // ========================================
-// STATIC PORTFOLIO - GITHUB PAGES
-// ========================================
-
-
-// ========================================
-// PROJECTS
+// YOUR PROJECTS
 // ========================================
 
 const projects = [
-
     {
-        title: "Personal Portfolio",
+        title: "Automatic Bell System using IoT",
 
         description:
-            "A responsive personal portfolio website showcasing my skills, education, projects and contact information.",
+            "An IoT-based automatic bell system designed to automate scheduled bell operations.",
 
         technologies:
-            "HTML, CSS, JavaScript"
+            "NodeMCU ESP8266, RTC DS3231, LCD, Relay and Buzzer"
     },
 
     {
-        title: "Library Management System",
+        title: "Automated Bathroom Ventilation Using Humidity Sensor",
 
         description:
-            "A library management system developed using XML and XQuery to store and retrieve book and student information.",
+            "An ESP32-based automatic bathroom ventilation system that monitors humidity using a DHT22 sensor and automatically controls an exhaust fan.",
 
         technologies:
-            "XML, XQuery"
-    },
-
-    {
-        title: "Student Management System",
-
-        description:
-            "A student management project for storing and managing student information.",
-
-        technologies:
-            "HTML, CSS, JavaScript"
+            "ESP32, DHT22 Sensor, Relay Module, Exhaust Fan, Arduino IDE, Embedded C/C++, Bluetooth"
     }
-
 ];
 
 
@@ -51,37 +34,24 @@ function loadProjects() {
     const container =
         document.getElementById("projects-container");
 
-
     if (!container) {
-
         console.error(
             "ERROR: projects-container not found."
         );
-
         return;
     }
 
-
-    // Clear existing content
-
     container.innerHTML = "";
-
-
-    // Create project cards
 
     projects.forEach((project) => {
 
         const card =
             document.createElement("div");
 
-        card.className =
-            "project-card";
+        card.className = "project-card";
 
 
-        // ================================
-        // PROJECT TITLE
-        // ================================
-
+        // Project title
         const title =
             document.createElement("h3");
 
@@ -89,10 +59,7 @@ function loadProjects() {
             project.title;
 
 
-        // ================================
-        // PROJECT DESCRIPTION
-        // ================================
-
+        // Project description
         const description =
             document.createElement("p");
 
@@ -100,13 +67,9 @@ function loadProjects() {
             project.description;
 
 
-        // ================================
-        // TECHNOLOGIES
-        // ================================
-
+        // Technologies
         const technologies =
             document.createElement("p");
-
 
         const strong =
             document.createElement("strong");
@@ -114,11 +77,7 @@ function loadProjects() {
         strong.textContent =
             "Technologies: ";
 
-
-        technologies.appendChild(
-            strong
-        );
-
+        technologies.appendChild(strong);
 
         technologies.appendChild(
             document.createTextNode(
@@ -127,33 +86,18 @@ function loadProjects() {
         );
 
 
-        // ================================
-        // ADD CONTENT TO CARD
-        // ================================
+        // Add everything to card
+        card.appendChild(title);
 
-        card.appendChild(
-            title
-        );
+        card.appendChild(description);
 
-        card.appendChild(
-            description
-        );
-
-        card.appendChild(
-            technologies
-        );
+        card.appendChild(technologies);
 
 
-        // ================================
-        // ADD CARD TO CONTAINER
-        // ================================
-
-        container.appendChild(
-            card
-        );
+        // Add card to page
+        container.appendChild(card);
 
     });
-
 }
 
 
@@ -164,17 +108,10 @@ function loadProjects() {
 function setupContactForm() {
 
     const contactForm =
-        document.getElementById(
-            "contactForm"
-        );
-
+        document.getElementById("contactForm");
 
     if (!contactForm) {
-
-        console.log(
-            "Contact form not found."
-        );
-
+        console.log("Contact form not found.");
         return;
     }
 
@@ -186,49 +123,28 @@ function setupContactForm() {
             event.preventDefault();
 
 
-            // ============================
-            // GET FORM INPUTS
-            // ============================
-
             const nameInput =
-                document.getElementById(
-                    "name"
-                );
-
+                document.getElementById("name");
 
             const emailInput =
-                document.getElementById(
-                    "email"
-                );
-
+                document.getElementById("email");
 
             const messageInput =
-                document.getElementById(
-                    "message"
-                );
+                document.getElementById("message");
 
 
             const name =
                 nameInput.value.trim();
 
-
             const email =
                 emailInput.value.trim();
-
 
             const message =
                 messageInput.value.trim();
 
 
-            // ============================
-            // VALIDATION
-            // ============================
-
-            if (
-                !name ||
-                !email ||
-                !message
-            ) {
+            // Validate
+            if (!name || !email || !message) {
 
                 alert(
                     "Please fill in all fields."
@@ -238,52 +154,31 @@ function setupContactForm() {
             }
 
 
-            // ============================
-            // YOUR EMAIL ADDRESS
-            // ============================
-
+            // YOUR EMAIL
             const myEmail =
                 "maskeankita12@gmail.com";
 
 
-            // ============================
-            // EMAIL SUBJECT
-            // ============================
-
+            // Email subject
             const subject =
                 encodeURIComponent(
-                    "Portfolio Contact from " +
-                    name
+                    "Portfolio Contact from " + name
                 );
 
 
-            // ============================
-            // EMAIL BODY
-            // ============================
-
+            // Email body
             const body =
                 encodeURIComponent(
-
                     "Name: " +
                     name +
-
-                    "\n\n" +
-
-                    "Email: " +
+                    "\n\nEmail: " +
                     email +
-
-                    "\n\n" +
-
-                    "Message:\n" +
+                    "\n\nMessage:\n" +
                     message
-
                 );
 
 
-            // ============================
-            // OPEN EMAIL APPLICATION
-            // ============================
-
+            // Open email application
             window.location.href =
                 "mailto:" +
                 myEmail +
@@ -293,20 +188,16 @@ function setupContactForm() {
                 body;
 
 
-            // ============================
-            // RESET FORM
-            // ============================
-
+            // Clear form
             contactForm.reset();
 
         }
     );
-
 }
 
 
 // ========================================
-// START WEBSITE
+// START
 // ========================================
 
 document.addEventListener(
