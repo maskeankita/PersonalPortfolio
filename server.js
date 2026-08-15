@@ -5,6 +5,9 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+
+// Railway provides PORT automatically.
+// For local computer, it will use 3000.
 const PORT = process.env.PORT || 3000;
 
 // ================= MIDDLEWARE =================
@@ -23,6 +26,7 @@ app.use(express.static(__dirname));
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 3306,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
@@ -90,9 +94,7 @@ app.post("/api/contact", (req, res) => {
 
     const { name, email, message } = req.body;
 
-
     // Check required fields
-
     if (!name || !email || !message) {
 
         return res.status(400).json({
@@ -102,14 +104,11 @@ app.post("/api/contact", (req, res) => {
 
     }
 
-
     // Insert contact message into MySQL
-
     const sql = `
         INSERT INTO contacts (name, email, message)
         VALUES (?, ?, ?)
     `;
-
 
     db.query(
         sql,
@@ -130,12 +129,10 @@ app.post("/api/contact", (req, res) => {
 
             }
 
-
             console.log(
                 "New contact message saved. ID:",
                 result.insertId
             );
-
 
             res.json({
                 success: true,
