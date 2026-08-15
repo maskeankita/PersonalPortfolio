@@ -7,7 +7,7 @@ const app = express();
 
 // ==================================================
 // SERVER PORT
-// Railway provides PORT automatically.
+// Railway automatically provides PORT.
 // Local computer uses 3000.
 // ==================================================
 
@@ -26,6 +26,23 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve HTML, CSS, JavaScript, images, etc.
 app.use(express.static(__dirname));
+
+
+// ==================================================
+// MYSQL CONFIGURATION CHECK
+// ==================================================
+
+console.log("=================================");
+console.log("MYSQL CONFIG CHECK");
+console.log("=================================");
+
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_PORT:", process.env.DB_PORT || 3306);
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_NAME:", process.env.DB_NAME);
+console.log("DB_PASSWORD exists:", !!process.env.DB_PASSWORD);
+
+console.log("=================================");
 
 
 // ==================================================
@@ -65,9 +82,6 @@ db.connect((err) => {
 
     console.log("=================================");
     console.log("MySQL connected successfully!");
-    console.log("Database host:", process.env.DB_HOST);
-    console.log("Database port:", process.env.DB_PORT || 3306);
-    console.log("Database name:", process.env.DB_NAME);
     console.log("=================================");
 
 });
