@@ -1,67 +1,82 @@
-// ================= PROJECTS =================
+// ========================================
+// PROJECTS
+// ========================================
 
 async function loadProjects() {
-
     const container = document.getElementById("projects-container");
 
     if (!container) {
+        console.error("ERROR: projects-container not found.");
         return;
     }
 
     try {
+        console.log("Loading projects...");
 
         const response = await fetch("/api/projects");
 
+        console.log("API status:", response.status);
+
         if (!response.ok) {
-            throw new Error("Failed to fetch projects");
+            throw new Error(
+                `Server returned status ${response.status}`
+            );
         }
 
         const data = await response.json();
 
-        if (!data.success) {
+        console.log("Projects API response:", data);
 
+        if (!data.success) {
             container.innerHTML = `
                 <p>Unable to load projects.</p>
             `;
-
             return;
         }
 
-        container.innerHTML = "";
-
         if (!data.projects || data.projects.length === 0) {
-
             container.innerHTML = `
                 <p>No projects available.</p>
             `;
-
             return;
         }
 
-        data.projects.forEach((project) => {
+        // Clear loading message
+        container.innerHTML = "";
 
+        // Create project cards
+        data.projects.forEach((project) => {
             const card = document.createElement("div");
 
             card.className = "project-card";
 
-            card.innerHTML = `
-                <h3>${project.title}</h3>
+            const title = document.createElement("h3");
+            title.textContent = project.title || "Untitled Project";
 
-                <p>
-                    ${project.description}
-                </p>
+            const description = document.createElement("p");
+            description.textContent =
+                project.description || "No description available.";
 
-                <p>
-                    <strong>Technologies:</strong>
-                    ${project.technologies}
-                </p>
-            `;
+            const technologies = document.createElement("p");
+
+            const strong = document.createElement("strong");
+            strong.textContent = "Technologies: ";
+
+            technologies.appendChild(strong);
+            technologies.appendChild(
+                document.createTextNode(
+                    project.technologies || "Not specified"
+                )
+            );
+
+            card.appendChild(title);
+            card.appendChild(description);
+            card.appendChild(technologies);
 
             container.appendChild(card);
         });
 
     } catch (error) {
-
         console.error("Project loading error:", error);
 
         container.innerHTML = `
@@ -71,7 +86,9 @@ async function loadProjects() {
 }
 
 
-// ================= CONTACT FORM =================
+// ========================================
+// CONTACT FORM
+// ========================================
 
 const contactForm = document.getElementById("contactForm");
 
@@ -81,21 +98,22 @@ if (contactForm) {
 
         event.preventDefault();
 
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const message = document.getElementById("message").value.trim();
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const messageInput = document.getElementById("message");
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const message = messageInput.value.trim();
 
         if (!name || !email || !message) {
-
             alert("Please fill in all fields.");
-
             return;
         }
 
         try {
 
             const response = await fetch("/api/contact", {
-
                 method: "POST",
 
                 headers: {
@@ -107,14 +125,15 @@ if (contactForm) {
                     email: email,
                     message: message
                 })
-
             });
 
-            if (!response.ok) {
-                throw new Error("Contact request failed");
-            }
-
             const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Contact request failed"
+                );
+            }
 
             alert(data.message);
 
@@ -124,7 +143,10 @@ if (contactForm) {
 
         } catch (error) {
 
-            console.error("Contact form error:", error);
+            console.error(
+                "Contact form error:",
+                error
+            );
 
             alert("Unable to send message.");
         }
@@ -132,6 +154,10 @@ if (contactForm) {
 }
 
 
-// ================= START =================
+// ========================================
+// START
+// ========================================
 
-loadProjects();
+document.addEventListener("DOMContentLoaded", () => {
+    loadProjects();
+});
