@@ -1,112 +1,26 @@
 // ========================================
-// PERSONAL PORTFOLIO
+// PERSONAL PORTFOLIO JAVASCRIPT
 // ========================================
 
+document.addEventListener("DOMContentLoaded", function () {
 
-// ========================================
-// PROJECT DATA
-// ========================================
-
-const projects = [
-    {
-        title: "Automatic Bell System using IoT",
-
-        description:
-            "An IoT-based automatic bell system designed to automate scheduled bell operations.",
-
-        technologies:
-            "NodeMCU ESP8266, RTC DS3231, LCD, Relay and Buzzer"
-    },
-
-    {
-        title: "Automated Bathroom Ventilation Using Humidity Sensor",
-
-        description:
-            "An ESP32-based automatic bathroom ventilation system that monitors humidity using a DHT22 sensor and automatically controls an exhaust fan.",
-
-        technologies:
-            "ESP32, DHT22 Sensor, Relay Module, Exhaust Fan, Arduino IDE, Embedded C/C++, Bluetooth"
-    }
-];
+    console.log("Portfolio JavaScript loaded.");
 
 
-// ========================================
-// DISPLAY PROJECTS
-// ========================================
-
-function loadProjects() {
-
-    const container =
-        document.getElementById("projects-container");
-
-    if (!container) {
-        console.error("projects-container not found.");
-        return;
-    }
-
-    container.innerHTML = "";
-
-    projects.forEach(function (project) {
-
-        const card = document.createElement("div");
-
-        card.className = "project-card";
-
-
-        // Project title
-        const title = document.createElement("h3");
-
-        title.textContent = project.title;
-
-
-        // Project description
-        const description = document.createElement("p");
-
-        description.textContent = project.description;
-
-
-        // Technologies
-        const technologyText = document.createElement("p");
-
-        const technologyLabel =
-            document.createElement("strong");
-
-        technologyLabel.textContent = "Technologies: ";
-
-        technologyText.appendChild(technologyLabel);
-
-        technologyText.appendChild(
-            document.createTextNode(
-                project.technologies
-            )
-        );
-
-
-        // Add elements to card
-        card.appendChild(title);
-
-        card.appendChild(description);
-
-        card.appendChild(technologyText);
-
-
-        // Add card to page
-        container.appendChild(card);
-    });
-}
-
-
-// ========================================
-// CONTACT FORM
-// ========================================
-
-function setupContactForm() {
+    // ========================================
+    // CONTACT FORM
+    // ========================================
 
     const contactForm =
         document.getElementById("contactForm");
 
+
     if (!contactForm) {
-        console.log("Contact form not found.");
+
+        console.error(
+            "ERROR: contactForm was not found."
+        );
+
         return;
     }
 
@@ -115,99 +29,187 @@ function setupContactForm() {
         "submit",
         function (event) {
 
+            // Prevent page reload
             event.preventDefault();
 
 
-            const name =
-                document.getElementById("name")
-                    ?.value.trim();
+            // ========================================
+            // GET FORM VALUES
+            // ========================================
 
-            const email =
-                document.getElementById("email")
-                    ?.value.trim();
+            const nameInput =
+                document.getElementById("name");
 
-            const message =
-                document.getElementById("message")
-                    ?.value.trim();
+            const emailInput =
+                document.getElementById("email");
+
+            const messageInput =
+                document.getElementById("message");
 
 
-            // Validate
-            if (!name || !email || !message) {
+            if (
+                !nameInput ||
+                !emailInput ||
+                !messageInput
+            ) {
 
                 alert(
-                    "Please fill in all fields."
+                    "Contact form fields are missing."
+                );
+
+                console.error(
+                    "name, email or message field not found."
                 );
 
                 return;
             }
 
 
-            // ====================================
-            // YOUR EMAIL ADDRESS
-            // ====================================
+            const name =
+                nameInput.value.trim();
 
-            const myEmail =
-                "maskeankita12@gmail.com";
+            const email =
+                emailInput.value.trim();
+
+            const message =
+                messageInput.value.trim();
 
 
-            // ====================================
-            // EMAIL SUBJECT
-            // ====================================
+            // ========================================
+            // VALIDATION
+            // ========================================
+
+            if (name === "") {
+
+                alert(
+                    "Please enter your name."
+                );
+
+                nameInput.focus();
+
+                return;
+            }
+
+
+            if (email === "") {
+
+                alert(
+                    "Please enter your email."
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            if (message === "") {
+
+                alert(
+                    "Please enter your message."
+                );
+
+                messageInput.focus();
+
+                return;
+            }
+
+
+            // ========================================
+            // EMAIL VALIDATION
+            // ========================================
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if (!emailPattern.test(email)) {
+
+                alert(
+                    "Please enter a valid email address."
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            // ========================================
+            // CREATE EMAIL SUBJECT
+            // ========================================
 
             const subject =
                 encodeURIComponent(
-                    "Portfolio Contact - " + name
+                    "New Portfolio Contact - " + name
                 );
 
 
-            // ====================================
-            // EMAIL MESSAGE
-            // ====================================
+            // ========================================
+            // CREATE EMAIL BODY
+            // ========================================
 
             const body =
                 encodeURIComponent(
+
+                    "Hello Ankita," +
+
+                    "\n\n" +
+
+                    "You received a new message from your portfolio website." +
+
+                    "\n\n" +
+
                     "Name: " +
                     name +
 
-                    "\n\nEmail: " +
+                    "\n\n" +
+
+                    "Email: " +
                     email +
 
-                    "\n\nMessage:\n" +
-                    message
+                    "\n\n" +
+
+                    "Message:" +
+
+                    "\n" +
+                    message +
+
+                    "\n\n" +
+
+                    "--------------------------------" +
+
+                    "\n" +
+
+                    "Sent from Ankita Maske Portfolio"
                 );
 
 
-            // ====================================
-            // OPEN EMAIL APPLICATION
-            // ====================================
+            // ========================================
+            // CREATE MAILTO LINK
+            // ========================================
 
-            window.location.href =
-                "mailto:" +
-                myEmail +
+            const mailtoLink =
+                "mailto:maskeankita12@gmail.com" +
                 "?subject=" +
                 subject +
                 "&body=" +
                 body;
 
 
-            // Clear form
-            contactForm.reset();
+            console.log(
+                "Opening email application..."
+            );
+
+
+            // ========================================
+            // OPEN EMAIL APPLICATION
+            // ========================================
+
+            window.location.href =
+                mailtoLink;
+
         }
     );
-}
 
-
-// ========================================
-// PAGE START
-// ========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadProjects();
-
-        setupContactForm();
-
-    }
-);
+});
